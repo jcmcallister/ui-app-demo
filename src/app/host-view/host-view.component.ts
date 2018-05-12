@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { LoadingComponent } from '../loading/loading.component';
+import { HostsComponent } from '../hosts/hosts.component';
 import { HostConfiguration } from '../hostconfiguration';
 
 @Component({

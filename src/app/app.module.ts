@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+
 
 
 import { AppComponent } from './app.component';
@@ -12,6 +14,9 @@ import { DataService } from './data.service';
 import { LoadingComponent } from './loading/loading.component';
 import { HostsComponent } from './hosts/hosts.component';
 import { HostViewComponent } from './host-view/host-view.component';
+
+// third party includes
+import { OrderModule } from 'ngx-order-pipe';
 
 const appRoutes: Routes = [
   {
@@ -43,10 +48,12 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
-     RouterModule.forRoot(
+    RouterModule.forRoot(
       appRoutes
-      ,{ enableTracing: false } // <-- debugging purposes only
-    )
+      // ,{ enableTracing: false } // <-- debugging purposes only
+    ),
+    OrderModule,
+    ReactiveFormsModule
   ],
   providers: [
     DataService

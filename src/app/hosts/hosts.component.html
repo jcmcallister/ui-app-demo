@@ -1,10 +1,42 @@
 <app-loading *ngIf="isLoading"></app-loading>
 
 <div class="results" *ngIf="theHosts.length > 0">
-  <div *ngFor="let host of theHosts">
-    <p>Name: {{ host.name }}</p>
-    <p>Hostname: {{ host.hostname }}</p>
-    <p>Port: {{ host.port }}</p>
-    <p>Username: {{ host.username }}</p>
+
+  <div class="search" *ngIf="searchEnabled">
+    <input type="text" [formControl]="term">
+  </div>
+
+  <div class="title-row">
+    <span class="name" (click)="orderBy('name')">Name&nbsp;
+      <span *ngIf="orderVal == 'name'">
+        <span [hidden]="orderReversed">⬆️</span>
+        <span [hidden]="!orderReversed">⬇️</span>
+      </span>
+    </span>
+    <span class="hostname" (click)="orderBy('hostname')">Hostname&nbsp;
+      <span *ngIf="orderVal == 'hostname'">
+        <span [hidden]="orderReversed">⬆️</span>
+        <span [hidden]="!orderReversed">⬇️</span>
+      </span>
+    </span>
+    <span class="port" (click)="orderBy('port')">Port&nbsp;
+      <span *ngIf="orderVal == 'port'">
+        <span [hidden]="orderReversed">⬆️</span>
+        <span [hidden]="!orderReversed">⬇️</span>
+      </span>
+    </span>
+    <span class="username" (click)="orderBy('username')">Username&nbsp;
+      <span *ngIf="orderVal == 'username'">
+        <span [hidden]="orderReversed">⬆️</span>
+        <span [hidden]="!orderReversed">⬇️</span>
+      </span>
+    </span>
+  </div>
+
+  <div class="result" *ngFor="let host of theHosts">
+    <span class="name">{{ host.name }}</span>
+    <span class="hostname">{{ host.hostname }}</span>
+    <span class="port">{{ host.port }}</span>
+    <span class="username">{{ host.username }}</span>
   </div>
 </div>

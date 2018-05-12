@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+
 import { DataService } from '../data.service';
 import { HostConfiguration } from '../hostconfiguration';
 import { GetConfigResponse } from '../get-config-response';
+import { OrderPipe } from 'ngx-order-pipe';
 
 @Component({
   selector: 'app-hosts',
@@ -12,10 +15,19 @@ export class HostsComponent implements OnInit {
 
   public theHosts : HostConfiguration[] = [];
   public isLoading: boolean = false;
+
+  public searchEnabled: boolean = false;
+  public term = new FormControl();
+
+  public resultPageSize: number = 24;
+  public orderVal: string = "";
+  public orderReversed: boolean = false;
+
+  private requestLimit: number = 100; // TODO: num of hosts per fetch request
   private retryFlag : boolean = false;
   private cache_expiry_minutes: number = 5; // number of minutes to cache remote resuls
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private orderPipe: OrderPipe) { }
 
   ngOnInit() {
     this.loadConfigs();
@@ -58,13 +70,14 @@ export class HostsComponent implements OnInit {
   getHostConfigs() {
     this.dataService.getConfigurations('request.php', 2)
       .subscribe(resp => {
-
-        console.log(JSON.stringify(resp));
-
         if (resp.status == 200 && typeof resp.body.configurations !== "undefined") {
           this.theHosts = resp.body.configurations;
           this.success();
           this.saveToCache();
+
+          if(this.theHosts.length > this.resultPageSize) {
+            this.searchEnabled = true;
+          }
         }else {
           this.retryFlag = true;
         }
@@ -80,6 +93,18 @@ export class HostsComponent implements OnInit {
   success() {
     this.isLoading = false;
     this.retryFlag = false;
+    this.searchEnabled = true;
+  }
+
+  orderBy(prop: string) {
+    if(this.orderVal === this.orderVal) {
+      this.orderReversed = true;
+    }else {
+      this.orderVal = prop;
+    }
+
+    // TODO: fix up so we don't mutate the original set
+    this.theHosts = this.orderPipe.transform(this.theHosts, prop);
   }
 
 }
