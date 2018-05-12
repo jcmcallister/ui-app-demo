@@ -1,0 +1,7 @@
+<app-loading *ngIf="isLoading"></app-loading>
+
+<div class="results" *ngIf="!isLoading">
+  <div *ngFor="let host of theHosts">
+    {{ host }}
+  </div>
+</div>

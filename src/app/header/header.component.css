@@ -1,0 +1,5 @@
+.logo, app-menu {
+  display: inline-block;
+  width: auto;
+  position: relative;
+}

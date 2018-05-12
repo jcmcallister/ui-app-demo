@@ -1,0 +1,7 @@
+<ul class="menu">
+  <li *ngFor="let item of menuitems">
+    <a *ngIf="item.isExtLink" href="{{item.href}}" target="_blank">{{ item.text }}</a>
+    <a *ngIf="item.isRoute" routerLink="{{item.href}}" routerLinkActive="active">{{ item.text }}</a>
+    <a *ngIf="item.isFunction" (click)="item.action">{{ item.text }}</a>
+  </li>
+</ul>
