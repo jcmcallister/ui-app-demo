@@ -1,5 +1,6 @@
 <div class="wrap--host-view">
   <h2>Hosts</h2>
   <p>The host view</p>
-  <app-hosts></app-hosts>
+  <app-hosts #hosts></app-hosts>
+  <div class="icon--refresh" (click)="hosts.forceUpdate()"><p>Refresh Hosts</p></div>
 </div>
