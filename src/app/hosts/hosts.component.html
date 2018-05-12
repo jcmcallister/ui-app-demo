@@ -1,7 +1,10 @@
 <app-loading *ngIf="isLoading"></app-loading>
 
-<div class="results" *ngIf="!isLoading">
+<div class="results" *ngIf="theHosts.length > 0">
   <div *ngFor="let host of theHosts">
-    {{ host }}
+    <p>Name: {{ host.name }}</p>
+    <p>Hostname: {{ host.hostname }}</p>
+    <p>Port: {{ host.port }}</p>
+    <p>Username: {{ host.username }}</p>
   </div>
 </div>
