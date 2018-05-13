@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import 'rxjs/Rx';
 
 import { DataService } from '../data.service';
 import { HostConfiguration } from '../hostconfiguration';
 import { GetConfigResponse } from '../get-config-response';
 import { OrderPipe } from 'ngx-order-pipe';
+
 
 @Component({
   selector: 'app-hosts',
@@ -13,7 +17,9 @@ import { OrderPipe } from 'ngx-order-pipe';
 })
 export class HostsComponent implements OnInit {
 
-  public theHosts : HostConfiguration[] = [];
+  public theHosts : HostConfiguration[] = []; // original dataset
+  public viewHosts : Observable<HostConfiguration[]>; // those visible in the view
+
   public isLoading: boolean = false;
 
   public searchEnabled: boolean = false;
@@ -27,7 +33,12 @@ export class HostsComponent implements OnInit {
   private retryFlag : boolean = false;
   private cache_expiry_minutes: number = 5; // number of minutes to cache remote resuls
 
-  constructor(private dataService: DataService, private orderPipe: OrderPipe) { }
+  constructor(private dataService: DataService, private orderPipe: OrderPipe) {
+    this.term.valueChanges
+      .debounceTime(300)
+      .distinctUntilChanged()
+      .subscribe( term => this.filterResults(term).then( filteredSet => this.viewHosts = filteredSet ) );
+  }
 
   ngOnInit() {
     this.loadConfigs();
@@ -39,7 +50,7 @@ export class HostsComponent implements OnInit {
     // unpack sessionStorage so we're not hammering the endpoint
     if(sessionStorage.getItem('hosts')) {
       if(this.cacheIsOK('hosts')) {
-        this.theHosts = JSON.parse(sessionStorage.getItem('hosts')) as HostConfiguration[]; // type assertions didn't like my <T>[]...
+        this.viewHosts = this.theHosts = JSON.parse(sessionStorage.getItem('hosts')) as HostConfiguration[]; // type assertions didn't like my <T>[]...
         this.success();
       } else {
         this.getHostConfigs();
@@ -71,7 +82,7 @@ export class HostsComponent implements OnInit {
     this.dataService.getConfigurations('request.php', 2)
       .subscribe(resp => {
         if (resp.status == 200 && typeof resp.body.configurations !== "undefined") {
-          this.theHosts = resp.body.configurations;
+          this.viewHosts = this.theHosts = resp.body.configurations;
           this.success();
           this.saveToCache();
 
@@ -103,8 +114,25 @@ export class HostsComponent implements OnInit {
       this.orderVal = prop;
     }
 
-    // TODO: fix up so we don't mutate the original set
-    this.theHosts = this.orderPipe.transform(this.theHosts, prop);
+    // using viewHosts so we don't mutate the original set
+    this.viewHosts = this.orderPipe.transform(this.viewHosts, prop);
+  }
+
+  filterResults(term: string) {
+    let result = null;
+
+    if(term.length == 0) {
+      result = this.theHosts;
+    } else {
+      result = this.viewHosts.filter((host) => {
+        return (host.name.indexOf(term) > -1) ||
+          (host.hostname.indexOf(term) > -1) ||
+          (host.port.toString().indexOf(term) > -1) ||
+          (host.username.indexOf(term) > -1);
+      });
+    }
+
+    return result;
   }
 
 }
