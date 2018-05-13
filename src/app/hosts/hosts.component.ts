@@ -18,7 +18,7 @@ import { OrderPipe } from 'ngx-order-pipe';
 export class HostsComponent implements OnInit {
 
   public theHosts : HostConfiguration[] = []; // original dataset
-  public viewHosts : Observable<HostConfiguration[]>; // those visible in the view
+  public viewHosts : HostConfiguration[]; // those visible in the view
 
   public isLoading: boolean = false;
 
@@ -80,15 +80,12 @@ export class HostsComponent implements OnInit {
 
   getHostConfigs() {
     this.dataService.getConfigurations('request.php', 2)
+    // this.dataService.getConfigurations('demo.json', 2)
       .subscribe(resp => {
         if (resp.status == 200 && typeof resp.body.configurations !== "undefined") {
           this.viewHosts = this.theHosts = resp.body.configurations;
           this.success();
           this.saveToCache();
-
-          if(this.theHosts.length > this.resultPageSize) {
-            this.searchEnabled = true;
-          }
         }else {
           this.retryFlag = true;
         }
@@ -108,10 +105,12 @@ export class HostsComponent implements OnInit {
   }
 
   orderBy(prop: string) {
-    if(this.orderVal === this.orderVal) {
-      this.orderReversed = true;
+    if(this.orderVal === prop) {
+      this.orderReversed = !this.orderReversed;
+      console.log("HostsCmp :: orderBy : reversed!");
     }else {
       this.orderVal = prop;
+      console.log("HostsCmp :: orderBy : new ordering value!");
     }
 
     // using viewHosts so we don't mutate the original set

@@ -8,32 +8,32 @@
 
   <div class="title-row">
     <span class="name" (click)="orderBy('name')">Name&nbsp;
-      <span [ngClass]="{ 'active' : orderVal === 'name'}">
+      <span class="ordering" [ngClass]="{ 'active' : orderVal === 'name'}">
         <span [hidden]="orderReversed">⬆️</span>
         <span [hidden]="!orderReversed">⬇️</span>
       </span>
     </span>
     <span class="hostname" (click)="orderBy('hostname')">Hostname&nbsp;
-      <span [ngClass]="{ 'active' : orderVal === 'hostname'}">
+      <span class="ordering" [ngClass]="{ 'active' : orderVal === 'hostname'}">
         <span [hidden]="orderReversed">⬆️</span>
         <span [hidden]="!orderReversed">⬇️</span>
       </span>
     </span>
     <span class="port" (click)="orderBy('port')">Port&nbsp;
-      <span [ngClass]="{ 'active' : orderVal === 'port'}">
+      <span class="ordering" [ngClass]="{ 'active' : orderVal === 'port'}">
         <span [hidden]="orderReversed">⬆️</span>
         <span [hidden]="!orderReversed">⬇️</span>
       </span>
     </span>
     <span class="username" (click)="orderBy('username')">Username&nbsp;
-      <span [ngClass]="{ 'active' : orderVal === 'username'}">
+      <span class="ordering" [ngClass]="{ 'active' : orderVal === 'username'}">
         <span [hidden]="orderReversed">⬆️</span>
         <span [hidden]="!orderReversed">⬇️</span>
       </span>
     </span>
   </div>
 
-  <div class="result" *ngFor="let host of viewHosts | async">
+  <div class="result" *ngFor="let host of viewHosts | orderBy: orderVal:orderReversed:'case-insensitive'">
     <span class="name">{{ host.name }}</span>
     <span class="hostname">{{ host.hostname }}</span>
     <span class="port">{{ host.port }}</span>

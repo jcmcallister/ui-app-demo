@@ -1,0 +1,7 @@
+.ordering {
+  display: none;
+}
+
+.ordering.active {
+  display: inline-block;
+}

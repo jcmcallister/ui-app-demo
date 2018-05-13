@@ -10,6 +10,7 @@ export class DataService {
   // TODO: something to hold any requested data for the duration of the logged in session
   public sessionData: Object = {};
   private endpoint_downloads: string = "download";
+  // private endpoint_downloads: string = "assets";
 
   constructor(private http: HttpClient) { }
 
@@ -18,7 +19,5 @@ export class DataService {
       this.endpoint_downloads + "/" + api_method + "?host=" + hostcount, { observe: 'response' }
     );
   }
-
-
 
 }
