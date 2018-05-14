@@ -1,1 +1,115 @@
-/* You can add global styles to this file, and also import other style files */
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+/* Site Defaults */
+* {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  color: #eee;
+  line-height: 1.4em;
+}
+
+p, span {
+  line-height: 1.4em;
+}
+
+h1 {
+  font-size: 32px;
+  font-size: 4vw;
+}
+
+h2 {
+  font-size: 28px;
+  font-size: 3.5vw;
+  font-weight: 300;
+  color: #222;
+  line-height: 1em;
+  padding-bottom: 0.5em;
+}
+
+a:visited {
+  color: #eee;
+}
+
+app-header {
+    width: 100%;
+    height: auto;
+    background-color: #222;
+    position: relative;
+    display: block;
+}
+
+.app-container {
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: block;
+}
+
+.wrap--content {
+  max-width: 960px;
+  max-width: 94vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content--page {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+@media (max-width: 1024px) {
+  .wrap--content {
+    max-width: 960px;
+    max-width: 90vw;
+  }
+}

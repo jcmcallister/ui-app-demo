@@ -5,3 +5,61 @@
 .ordering.active {
   display: inline-block;
 }
+
+
+p {
+  color: #222;
+}
+
+
+.results {
+  background-color: #eee;
+  padding: 1.5em;
+}
+
+.result {
+  border-bottom: 1px solid rgba(32,32,32,0.25);
+}
+
+.result > span {
+  font-size: 16px;
+  font-size: 1.5vw;
+  min-width: 122px;
+  min-width: 9vw;
+  position: relative;
+  display: inline-block;
+  line-height: 2em;
+}
+
+.result > span.hostname {
+  min-width: 262px;
+  min-width: 20vw;
+}
+
+.title-row {
+  border-bottom: 1px solid rgba(32,32,32,1);
+}
+
+.search {
+  position: relative;
+  width: 100%;
+  display: inline;
+}
+
+.search input {
+  line-height: 2em;
+  font-size: 1em;
+  position: relative;
+  display: inline-block;
+}
+
+.search .icon--search {
+  position: absolute;
+  display: inline-block;
+  top: 0px;
+  right: 0px;
+  width: 1.4em;
+  height: 1.4em;
+  font-size: 1.4em;
+  line-height: 0.8em;
+}

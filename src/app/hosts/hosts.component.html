@@ -4,10 +4,11 @@
 
   <div class="search" *ngIf="searchEnabled">
     <input type="text" [formControl]="term">
+    <span class="icon--search">🔍</span>
   </div>
 
-  <div class="title-row">
-    <span class="ID" (click)="orderBy('id')">ID&nbsp;
+  <div class="result title-row">
+    <span class="id" (click)="orderBy('id')">ID&nbsp;
       <span class="ordering" [ngClass]="{ 'active' : orderVal === 'id'}">
         <span [hidden]="orderReversed">⬆️</span>
         <span [hidden]="!orderReversed">⬇️</span>

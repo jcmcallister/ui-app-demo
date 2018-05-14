@@ -26,7 +26,7 @@ export class HostsComponent implements OnInit, OnDestroy {
   public term = new FormControl();
 
   public resultPageSize: number = 24; // TODO: paginate results in the view
-  public orderVal: string = "";
+  public orderVal: string = "id";
   public orderReversed: boolean = false;
 
   private requestLimit: number = 100; // TODO: for large requests, e.g. 10,000 hosts, segment num of hosts per fetch request
@@ -135,10 +135,8 @@ export class HostsComponent implements OnInit, OnDestroy {
   orderBy(prop: string) {
     if(this.orderVal === prop) {
       this.orderReversed = !this.orderReversed;
-      console.log("HostsCmp :: orderBy : reversed!");
     }else {
       this.orderVal = prop;
-      console.log("HostsCmp :: orderBy : new ordering value!");
     }
 
     // using viewHosts so we don't mutate the original set
