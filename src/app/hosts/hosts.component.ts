@@ -25,11 +25,11 @@ export class HostsComponent implements OnInit, OnDestroy {
   public searchEnabled: boolean = false;
   public term = new FormControl();
 
-  public resultPageSize: number = 24;
+  public resultPageSize: number = 24; // TODO: paginate results in the view
   public orderVal: string = "";
   public orderReversed: boolean = false;
 
-  private requestLimit: number = 100; // TODO: num of hosts per fetch request
+  private requestLimit: number = 100; // TODO: for large requests, e.g. 10,000 hosts, segment num of hosts per fetch request
   private retryFlag : boolean = false;
   private cache_expiry_minutes: number = 5; // number of minutes to cache remote resuls
 
@@ -47,7 +47,8 @@ export class HostsComponent implements OnInit, OnDestroy {
         let filteredSet;
         if (filterBy) {
           filteredSet = this.theHosts.filter((host) => {
-            return (host.name.toLowerCase().indexOf(filterBy) > -1) ||
+            return (host.id.toString().indexOf(filterBy) > -1) ||
+              (host.name.toLowerCase().indexOf(filterBy) > -1) ||
               (host.hostname.toLowerCase().indexOf(filterBy) > -1) ||
               (host.port.toString().indexOf(filterBy) > -1) ||
               (host.username.toLowerCase().indexOf(filterBy) > -1);
@@ -76,7 +77,7 @@ export class HostsComponent implements OnInit, OnDestroy {
     // unpack sessionStorage so we're not hammering the endpoint
     if(sessionStorage.getItem('hosts')) {
       if(this.cacheIsOK('hosts')) {
-        this.viewHosts = this.theHosts = JSON.parse(sessionStorage.getItem('hosts')) as HostConfiguration[]; // type assertions didn't like my <T>[]...
+        this.viewHosts = this.theHosts = JSON.parse(sessionStorage.getItem('hosts')) as HostConfiguration[];
         this.success();
       } else {
         this.getHostConfigs();
@@ -105,7 +106,7 @@ export class HostsComponent implements OnInit, OnDestroy {
   }
 
   getHostConfigs() {
-    this.dataService.getConfigurations('request.php', 2)
+    this.dataService.getConfigurations('request.php', 25)
     // this.dataService.getConfigurations('demo.json', 2)
       .subscribe(resp => {
         if (resp.status == 200 && typeof resp.body.configurations !== "undefined") {
@@ -120,6 +121,7 @@ export class HostsComponent implements OnInit, OnDestroy {
 
   saveToCache() {
     // on success, put theHosts in sessionStorage, with an expiry key/val, too
+    // TODO: make this process into a separate static class for future ease of use
     sessionStorage.setItem('hosts', JSON.stringify(this.theHosts));
     sessionStorage.setItem('hosts_expiry', (Date.now() + (this.cache_expiry_minutes * 60 * 1000)).toString() );
   }
@@ -140,6 +142,7 @@ export class HostsComponent implements OnInit, OnDestroy {
     }
 
     // using viewHosts so we don't mutate the original set
+    // KNOWN BUG: sorting on host numbers, e.g. [host1, host2, host20, host12], has incorrect results [host1, host12, host2, host20]
     this.viewHosts = this.orderPipe.transform(this.viewHosts, prop);
   }
 

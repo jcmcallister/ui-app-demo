@@ -7,6 +7,12 @@
   </div>
 
   <div class="title-row">
+    <span class="ID" (click)="orderBy('id')">ID&nbsp;
+      <span class="ordering" [ngClass]="{ 'active' : orderVal === 'id'}">
+        <span [hidden]="orderReversed">⬆️</span>
+        <span [hidden]="!orderReversed">⬇️</span>
+      </span>
+    </span>
     <span class="name" (click)="orderBy('name')">Name&nbsp;
       <span class="ordering" [ngClass]="{ 'active' : orderVal === 'name'}">
         <span [hidden]="orderReversed">⬆️</span>
@@ -34,6 +40,7 @@
   </div>
 
   <div class="result" *ngFor="let host of viewHosts | orderBy: orderVal:orderReversed:'case-insensitive'">
+    <span class="id">{{ host.id }}</span>
     <span class="name">{{ host.name }}</span>
     <span class="hostname">{{ host.hostname }}</span>
     <span class="port">{{ host.port }}</span>
