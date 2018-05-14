@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ import { OrderPipe } from 'ngx-order-pipe';
   templateUrl: './hosts.component.html',
   styleUrls: ['./hosts.component.css']
 })
-export class HostsComponent implements OnInit {
+export class HostsComponent implements OnInit, OnDestroy {
 
   public theHosts : HostConfiguration[] = []; // original dataset
   public viewHosts : HostConfiguration[]; // those visible in the view
@@ -33,15 +33,41 @@ export class HostsComponent implements OnInit {
   private retryFlag : boolean = false;
   private cache_expiry_minutes: number = 5; // number of minutes to cache remote resuls
 
+  private termSubscription;
+
   constructor(private dataService: DataService, private orderPipe: OrderPipe) {
-    this.term.valueChanges
+    this.termSubscription = this.term.valueChanges
       .debounceTime(300)
       .distinctUntilChanged()
-      .subscribe( term => this.filterResults(term).then( filteredSet => this.viewHosts = filteredSet ) );
+      .subscribe( term => {
+        // read in our term if field has a value
+        let filterBy = term ? term.toLowerCase() : null;
+
+        // filter if needed
+        let filteredSet;
+        if (filterBy) {
+          filteredSet = this.theHosts.filter((host) => {
+            return (host.name.toLowerCase().indexOf(filterBy) > -1) ||
+              (host.hostname.toLowerCase().indexOf(filterBy) > -1) ||
+              (host.port.toString().indexOf(filterBy) > -1) ||
+              (host.username.toLowerCase().indexOf(filterBy) > -1);
+          });
+        } else {
+          filteredSet = this.theHosts;
+        }
+
+        // assign to visible template
+        this.viewHosts = filteredSet;
+      } );
   }
 
   ngOnInit() {
     this.loadConfigs();
+  }
+
+  ngOnDestroy(){
+    // unsubscribe our local to avoid memory leak
+    this.termSubscription.unsubscribe();
   }
 
   loadConfigs() {
@@ -117,21 +143,5 @@ export class HostsComponent implements OnInit {
     this.viewHosts = this.orderPipe.transform(this.viewHosts, prop);
   }
 
-  filterResults(term: string) {
-    let result = null;
-
-    if(term.length == 0) {
-      result = this.theHosts;
-    } else {
-      result = this.viewHosts.filter((host) => {
-        return (host.name.indexOf(term) > -1) ||
-          (host.hostname.indexOf(term) > -1) ||
-          (host.port.toString().indexOf(term) > -1) ||
-          (host.username.indexOf(term) > -1);
-      });
-    }
-
-    return result;
-  }
 
 }

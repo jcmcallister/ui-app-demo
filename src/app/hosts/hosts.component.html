@@ -3,7 +3,7 @@
 <div class="results" *ngIf="theHosts.length > 0">
 
   <div class="search" *ngIf="searchEnabled">
-    <input type="text" [formControl]="term" (keyup)="filterResults()">
+    <input type="text" [formControl]="term">
   </div>
 
   <div class="title-row">
